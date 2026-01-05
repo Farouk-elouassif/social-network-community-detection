@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détection de Communautés - Réseau d'Amis</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Vis.js pour la visualisation des graphes -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Détection de Communautés</h1>
+            <p>Identifiez des sous-groupes cohérents dans un réseau d'amis</p>
+        </header>
+
+        <!-- Zone d'import -->
+        <section class="import-section">
+            <h2>Importer un fichier CSV</h2>
+            <p class="info">Format attendu: <code>utilisateur1,utilisateur2</code></p>
+            
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept=".csv" hidden>
+                <div class="upload-content">
+                    <span class="upload-icon">+</span>
+                    <p>Glissez votre fichier CSV ici</p>
+                    <p>ou</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        Parcourir
+                    </button>
+                </div>
+            </div>
+            
+            <div class="file-info" id="fileInfo" style="display: none;">
+                <span id="fileName"></span>
+                <button class="btn btn-small" onclick="resetUpload()">×</button>
+            </div>
+        </section>
+
+        <!-- Statistiques du graphe -->
+        <section class="stats-section" id="statsSection" style="display: none;">
+            <h2>Informations du Graphe</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="statNodes">0</span>
+                    <span class="stat-label">Utilisateurs</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="statEdges">0</span>
+                    <span class="stat-label">Relations</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="statCommunities">0</span>
+                    <span class="stat-label">Communautés</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="statModularity">0</span>
+                    <span class="stat-label">Modularité</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Boutons d'action -->
+        <section class="actions-section" id="actionsSection" style="display: none;">
+            <button class="btn btn-primary" onclick="detectCommunities('louvain')">
+                Louvain
+            </button>
+            <button class="btn btn-secondary" onclick="detectCommunities('girvan-newman')">
+                Girvan-Newman
+            </button>
+            <button class="btn btn-outline" onclick="showOriginalGraph()">
+                Graphe Original
+            </button>
+        </section>
+
+        <!-- Visualisation du graphe -->
+        <section class="graph-section" id="graphSection" style="display: none;">
+            <h2>Visualisation du Réseau</h2>
+            <div class="graph-container" id="graphContainer"></div>
+            
+            <!-- Légende -->
+            <div class="legend" id="legend"></div>
+        </section>
+
+        <!-- Liste des communautés -->
+        <section class="communities-section" id="communitiesSection" style="display: none;">
+            <h2>Communautés Détectées</h2>
+            <div class="communities-grid" id="communitiesGrid"></div>
+        </section>
+
+        <!-- Analyse -->
+        <section class="analysis-section" id="analysisSection" style="display: none;">
+            <h2>Analyse des Relations</h2>
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>Communauté</th>
+                        <th>Taille</th>
+                        <th>Arêtes Internes</th>
+                        <th>Arêtes Externes</th>
+                        <th>Densité</th>
+                    </tr>
+                </thead>
+                <tbody id="analysisTableBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Projet Structure de Données - Détection de Communautés</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
