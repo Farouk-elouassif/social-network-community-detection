@@ -1,0 +1,396 @@
+\documentclass[12pt,a4paper]{article}
+
+% === Packages ===
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{enumitem}
+
+% === Configuration de la page ===
+\geometry{margin=2.5cm}
+
+% === Configuration des liens ===
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+% === Configuration du code source ===
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% === Début du document ===
+\begin{document}
+
+% === Titre ===
+\begin{center}
+    {\LARGE\textbf{Documentation du Projet}}\\[0.5cm]
+    {\Large Détection de Communautés dans un Réseau d'Amis}\\[1cm]
+\end{center}
+
+% ============================================================================
+\section{Présentation du Projet}
+% ============================================================================
+
+\subsection{Objectif Principal}
+Identifier des \textbf{sous-groupes cohérents} (communautés) dans un réseau social de 20-30 utilisateurs. Une communauté est un groupe d'utilisateurs plus connectés entre eux qu'avec le reste du réseau.
+
+\subsection{Ce que nous allons faire}
+\begin{enumerate}
+    \item Créer un fichier de données avec les relations d'amitié (CSV)
+    \item Construire un graphe à partir de ces données
+    \item Appliquer 2 algorithmes de détection de communautés
+    \item Visualiser les résultats graphiquement
+    \item Comparer les algorithmes
+    \item Analyser les relations internes et externes
+\end{enumerate}
+
+% ============================================================================
+\section{Structure des Dossiers}
+% ============================================================================
+
+\begin{lstlisting}[language=bash]
+Projet-Structure-15/
+|
+|-- data/
+|   +-- reseau_amis.csv       # Les donnees (relations d'amitie)
+|
+|-- src/
+|   |-- graphe.py             # Construire le graphe
+|   |-- louvain.py            # Algorithme 1 : Louvain
+|   |-- girvan_newman.py      # Algorithme 2 : Girvan-Newman
+|   |-- comparaison.py        # Comparer les 2 algorithmes
+|   |-- visualisation.py      # Dessiner les graphes
+|   +-- analyse.py            # Analyser les communautes
+|
+|-- resultats/                # Images generees
+|-- latex/                    # Ce document
+|-- main.py                   # Programme principal
++-- requirements.txt          # Bibliotheques a installer
+\end{lstlisting}
+
+% ============================================================================
+\section{Description de Chaque Fichier}
+% ============================================================================
+
+% --- DATA ---
+\subsection{data/reseau\_amis.csv}
+
+\textbf{Rôle :} Contient les données du réseau social.
+
+\textbf{Format :}
+\begin{lstlisting}
+utilisateur1,utilisateur2
+Alice,Bob
+Alice,Charlie
+Bob,Charlie
+\end{lstlisting}
+
+\textbf{Contenu actuel :}
+\begin{itemize}
+    \item 20 utilisateurs (nœuds)
+    \item 5 groupes naturels de 4 personnes chacun
+    \item Des connexions entre les groupes (ponts)
+\end{itemize}
+
+% --- GRAPHE.PY ---
+\subsection{src/graphe.py}
+
+\textbf{Rôle :} Charger les données et construire le graphe.
+
+\textbf{Fonctions :}
+\begin{itemize}
+    \item \texttt{charger\_donnees(chemin)} -- Lit le fichier CSV
+    \item \texttt{construire\_graphe(df)} -- Crée le graphe NetworkX
+    \item \texttt{afficher\_informations\_graphe(G)} -- Affiche les stats (nœuds, arêtes, densité...)
+    \item \texttt{charger\_graphe\_complet(chemin)} -- Fait tout en une seule étape
+\end{itemize}
+
+\textbf{Bibliothèques utilisées :} pandas, networkx
+
+% --- LOUVAIN.PY ---
+\subsection{src/louvain.py}
+
+\textbf{Rôle :} Détecter les communautés avec l'algorithme de Louvain.
+
+\textbf{Fonctions prévues :}
+\begin{itemize}
+    \item \texttt{detecter\_communautes(G)} -- Applique Louvain et retourne les groupes
+    \item \texttt{calculer\_modularite(G, partition)} -- Calcule la qualité de la partition
+    \item \texttt{afficher\_communautes(partition)} -- Affiche les membres de chaque groupe
+\end{itemize}
+
+\textbf{Bibliothèque utilisée :} python-louvain (community)
+
+% --- GIRVAN-NEWMAN.PY ---
+\subsection{src/girvan\_newman.py}
+
+\textbf{Rôle :} Détecter les communautés avec l'algorithme de Girvan-Newman.
+
+\textbf{Fonctions prévues :}
+\begin{itemize}
+    \item \texttt{detecter\_communautes(G, k)} -- Applique Girvan-Newman pour k communautés
+    \item \texttt{calculer\_modularite(G, communautes)} -- Calcule la qualité
+    \item \texttt{afficher\_communautes(communautes)} -- Affiche les groupes
+\end{itemize}
+
+\textbf{Bibliothèque utilisée :} networkx (intégré)
+
+% --- COMPARAISON.PY ---
+\subsection{src/comparaison.py}
+
+\textbf{Rôle :} Comparer les résultats des deux algorithmes.
+
+\textbf{Fonctions prévues :}
+\begin{itemize}
+    \item \texttt{comparer\_algorithmes(G)} -- Exécute les 2 algos et compare
+    \item \texttt{afficher\_tableau\_comparaison(resultats)} -- Affiche un tableau récapitulatif
+    \item \texttt{mesurer\_temps\_execution(algo, G)} -- Mesure le temps de chaque algo
+\end{itemize}
+
+\textbf{Métriques comparées :}
+\begin{itemize}
+    \item Modularité (qualité de la partition)
+    \item Temps d'exécution
+    \item Nombre de communautés détectées
+    \item Taille moyenne des communautés
+\end{itemize}
+
+% --- VISUALISATION.PY ---
+\subsection{src/visualisation.py}
+
+\textbf{Rôle :} Créer les visualisations graphiques.
+
+\textbf{Fonctions prévues :}
+\begin{itemize}
+    \item \texttt{dessiner\_graphe\_simple(G)} -- Dessine le graphe sans couleurs
+    \item \texttt{dessiner\_communautes(G, partition, titre)} -- Dessine avec couleurs par communauté
+    \item \texttt{dessiner\_comparaison(G, partition1, partition2)} -- Côte à côte
+    \item \texttt{sauvegarder\_image(fig, nom)} -- Sauvegarde dans resultats/
+\end{itemize}
+
+\textbf{Bibliothèque utilisée :} matplotlib
+
+% --- ANALYSE.PY ---
+\subsection{src/analyse.py}
+
+\textbf{Rôle :} Analyser les communautés détectées.
+
+\textbf{Fonctions prévues :}
+\begin{itemize}
+    \item \texttt{compter\_aretes\_internes(G, communaute)} -- Arêtes dans le groupe
+    \item \texttt{compter\_aretes\_externes(G, communaute)} -- Arêtes vers d'autres groupes
+    \item \texttt{calculer\_densite(G, communaute)} -- Densité du groupe
+    \item \texttt{analyser\_toutes\_communautes(G, partition)} -- Analyse complète
+    \item \texttt{afficher\_rapport(analyse)} -- Affiche les résultats
+\end{itemize}
+
+\textbf{Métriques calculées :}
+\begin{itemize}
+    \item Arêtes internes vs externes
+    \item Ratio interne/externe
+    \item Densité de chaque communauté
+\end{itemize}
+
+% --- MAIN.PY ---
+\subsection{main.py}
+
+\textbf{Rôle :} Point d'entrée qui exécute tout le programme.
+
+\textbf{Étapes :}
+\begin{enumerate}
+    \item Charger le graphe depuis le CSV
+    \item Afficher les informations du graphe
+    \item Appliquer Louvain
+    \item Appliquer Girvan-Newman
+    \item Comparer les deux algorithmes
+    \item Visualiser les résultats
+    \item Analyser les communautés
+    \item Sauvegarder les images
+\end{enumerate}
+
+% ============================================================================
+\section{Les Algorithmes}
+% ============================================================================
+
+\subsection{Algorithme de Louvain}
+
+\textbf{Approche :} Bottom-up (agglomérative)
+
+\textbf{Principe :}
+\begin{enumerate}
+    \item Au début : chaque personne = sa propre communauté
+    \item On essaie de déplacer chaque personne vers une communauté voisine
+    \item Si ça améliore la modularité, on fait le déplacement
+    \item On répète jusqu'à ce qu'on ne puisse plus améliorer
+    \item On fusionne les communautés en "super-nœuds" et on recommence
+\end{enumerate}
+
+\textbf{Avantages :}
+\begin{itemize}
+    \item Très rapide
+    \item Bons résultats
+    \item Trouve automatiquement le nombre de communautés
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+    \item Peut manquer de petites communautés
+\end{itemize}
+
+\subsection{Algorithme de Girvan-Newman}
+
+\textbf{Approche :} Top-down (divisive)
+
+\textbf{Principe :}
+\begin{enumerate}
+    \item Au début : tout le monde dans une seule grande communauté
+    \item On calcule l'importance de chaque arête (betweenness)
+    \item On supprime l'arête la plus importante (le "pont")
+    \item On répète jusqu'à avoir le nombre de communautés voulu
+\end{enumerate}
+
+\textbf{Avantages :}
+\begin{itemize}
+    \item Détecte bien les ponts entre groupes
+    \item On contrôle le nombre de communautés
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+    \item Plus lent que Louvain
+    \item Il faut choisir le nombre de communautés
+\end{itemize}
+
+% ============================================================================
+\section{La Modularité}
+% ============================================================================
+
+La \textbf{modularité} mesure la qualité d'une partition en communautés.
+
+\textbf{Formule :}
+$$Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i, c_j)$$
+
+\textbf{Interprétation :}
+\begin{itemize}
+    \item $Q$ proche de 1 = excellente séparation en communautés
+    \item $Q$ proche de 0 = partition aléatoire
+    \item $Q$ négatif = pire qu'aléatoire
+\end{itemize}
+
+En pratique, une modularité $> 0.3$ indique une bonne structure de communautés.
+
+% ============================================================================
+\section{Analyse des Relations}
+% ============================================================================
+
+\subsection{Relations Internes}
+Connexions entre membres de la \textbf{même} communauté.
+$$\text{Arêtes internes} = \text{connexions dans le groupe}$$
+
+\subsection{Relations Externes}
+Connexions entre membres de communautés \textbf{différentes}.
+$$\text{Arêtes externes} = \text{connexions vers d'autres groupes}$$
+
+\subsection{Densité Interne}
+Mesure à quel point un groupe est connecté.
+$$\text{Densité} = \frac{\text{arêtes existantes}}{\text{arêtes possibles}} = \frac{2 \times \text{arêtes}}{n \times (n-1)}$$
+
+Une bonne communauté a :
+\begin{itemize}
+    \item Beaucoup d'arêtes internes
+    \item Peu d'arêtes externes
+    \item Densité interne élevée
+\end{itemize}
+
+% ============================================================================
+\section{Comparaison Prévue}
+% ============================================================================
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Critère} & \textbf{Louvain} & \textbf{Girvan-Newman} \\
+        \midrule
+        Approche & Bottom-up & Top-down \\
+        Vitesse & Rapide & Lent \\
+        Nb communautés & Automatique & À choisir \\
+        Qualité & Très bonne & Bonne \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ============================================================================
+\section{Comment Exécuter le Projet}
+% ============================================================================
+
+\subsection{Installation}
+\begin{lstlisting}[language=bash]
+# Creer un environnement virtuel
+python -m venv .venv
+source .venv/bin/activate
+
+# Installer les dependances
+pip install -r requirements.txt
+\end{lstlisting}
+
+\subsection{Exécution}
+\begin{lstlisting}[language=bash]
+python main.py
+\end{lstlisting}
+
+\subsection{Dépendances (requirements.txt)}
+\begin{lstlisting}
+networkx>=3.0
+pandas>=2.0
+matplotlib>=3.7
+python-louvain>=0.16
+\end{lstlisting}
+
+% ============================================================================
+\section{Résultats Attendus}
+% ============================================================================
+
+Le programme va générer :
+
+\begin{enumerate}
+    \item \textbf{Affichage console :}
+    \begin{itemize}
+        \item Informations du graphe (nœuds, arêtes, densité)
+        \item Communautés détectées par chaque algorithme
+        \item Tableau de comparaison
+        \item Analyse des relations internes/externes
+    \end{itemize}
+    
+    \item \textbf{Images dans resultats/ :}
+    \begin{itemize}
+        \item graphe\_original.png -- Le réseau sans couleurs
+        \item graphe\_louvain.png -- Communautés Louvain
+        \item graphe\_girvan\_newman.png -- Communautés Girvan-Newman
+        \item comparaison.png -- Les deux côte à côte
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
