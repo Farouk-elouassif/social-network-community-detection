@@ -611,4 +611,51 @@ function displayAnalysis() {
         
         tbody.appendChild(row);
     });
+    
+    // Show export button
+    document.getElementById('exportSection').style.display = 'flex';
+}
+
+// === Export PDF ===
+function exportToPDF() {
+    // Get the container to export
+    const element = document.querySelector('.container');
+    
+    // Configure options
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'rapport-communautes.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+    
+    // Hide elements we don't want in PDF
+    const importSection = document.querySelector('.import-section');
+    const actionsSection = document.getElementById('actionsSection');
+    const exportSection = document.getElementById('exportSection');
+    const footer = document.querySelector('footer');
+    
+    importSection.style.display = 'none';
+    actionsSection.style.display = 'none';
+    exportSection.style.display = 'none';
+    footer.style.display = 'none';
+    
+    // Generate PDF
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Restore visibility
+        importSection.style.display = 'block';
+        actionsSection.style.display = 'flex';
+        exportSection.style.display = 'flex';
+        footer.style.display = 'block';
+    });
 }

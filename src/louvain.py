@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.graphe import charger_graphe_complet
 
 
-def detecter_communautes(G):
+def detecter_communautes(G):        
     """
     Applique l'algorithme de Louvain pour détecter les communautés.
     

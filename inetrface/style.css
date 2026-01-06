@@ -303,6 +303,39 @@ section h2 {
     background: #f5f5f5;
 }
 
+/* === Export Section === */
+.export-section {
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 20px 0;
+}
+
+.btn-export {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* === Print Styles === */
+@media print {
+    .import-section,
+    .actions-section,
+    .export-section,
+    footer {
+        display: none !important;
+    }
+    
+    .graph-container {
+        height: 400px !important;
+    }
+    
+    section {
+        break-inside: avoid;
+    }
+}
+
 /* === Footer === */
 footer {
     text-align: center;

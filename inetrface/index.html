@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- Vis.js pour la visualisation des graphes -->
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- html2pdf pour l'export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -105,6 +107,13 @@
                 </thead>
                 <tbody id="analysisTableBody"></tbody>
             </table>
+        </section>
+
+        <!-- Export Section -->
+        <section class="export-section" id="exportSection" style="display: none;">
+            <button class="btn btn-primary btn-export" onclick="exportToPDF()">
+                Exporter en PDF
+            </button>
         </section>
 
         <!-- Footer -->
